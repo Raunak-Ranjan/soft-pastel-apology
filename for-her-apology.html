@@ -1,0 +1,249 @@
+<!-- ===== Single clean file: 00-apology-switcher.html (No duplicates) ===== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Soft Pastel Apology — Switcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg1:#fffaf3;--bg2:#f7ecff;--ink:#2b2630;--muted:#6e6779;--accent:#c26ce5;--accent-strong:#a23fd7;--card:#ffffff;--ring:#e4d7ff;--soft:#fde7f7;
+      --tab-bg:#ffffff;--tab-active:#f7ecff;--tab-border:#e9d5ff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--ink)}
+
+    .app{min-height:100svh;display:flex;flex-direction:column}
+    header{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid #f1e8ff;z-index:5}
+    .bar{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:14px 16px}
+    .logo{font-weight:700}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+    .tab{padding:10px 14px;border-radius:999px;border:1px solid var(--tab-border);background:var(--tab-bg);cursor:pointer;font-weight:600;color:var(--ink);transition:transform .15s ease, background .2s ease, box-shadow .2s ease}
+    .tab:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+    .tab.active{background:linear-gradient(135deg,#ffeaf5,var(--tab-active));border-color:var(--accent);box-shadow:0 6px 16px rgba(194,108,229,.18)}
+    .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+    .wrap{max-width:1100px;margin:18px auto;padding:0 16px;display:grid;grid-template-columns:1fr;gap:14px}
+    .panel{background:var(--card);border:1px solid #f1e8ff;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.06);overflow:hidden}
+
+    .view{position:relative}
+    .view > section{opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .28s ease, transform .28s ease}
+    .view > section.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+    .content-shell{padding:8px}
+
+    .btn{appearance:none;border:none;background:var(--accent);color:#fff;padding:12px 16px;border-radius:12px;font-weight:600;cursor:pointer;transition:transform .15s ease, box-shadow .2s ease}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(162,63,215,.25)}
+    .btn.ghost{background:#fff;border:1px solid var(--ring);color:#6b4bb0}
+
+    .hearts,.sparkles{position:fixed;inset:0;pointer-events:none}
+    .hearts{z-index:2}
+    .sparkles{z-index:1}
+
+    .hearts span{position:absolute;bottom:-40px;font-size:18px;animation:floatUp 6.5s linear forwards;opacity:.7;filter:drop-shadow(0 2px 6px rgba(0,0,0,.12))}
+    @keyframes floatUp{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-115vh) scale(1.55);opacity:0}}
+
+    .sparkles i{position:absolute;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle,#ffd9f0,#e9d5ff);opacity:.85;animation:twinkle 3.2s ease-in-out infinite}
+    @keyframes twinkle{0%,100%{transform:scale(.6);opacity:.5}50%{transform:scale(1);opacity:1}}
+
+    .notes{padding:18px}
+    .notes h3{margin:0 0 8px}
+    .note-card{background:#fff7fb;border:1px dashed #f1c4e6;border-radius:14px;padding:14px;line-height:1.7;color:#43384a}
+    .sig{margin-top:10px;color:#8b7a9e;font-weight:600}
+
+    @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="bar">
+        <div class="logo">💗 Soft Pastel Apology</div>
+        <nav class="tabs" id="tabs" aria-label="Apology variations"></nav>
+      </div>
+    </header>
+
+    <div class="hearts" id="hearts" aria-hidden="true"></div>
+    <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+    <main class="wrap">
+      <section class="panel view" aria-live="polite">
+        <div class="content-shell" id="views"></div>
+      </section>
+
+      <section class="panel notes">
+        <h3>Notes (raw, real, from the heart)</h3>
+        <div class="note-card" id="noteCard">
+          Hey, I’m sorry for the way I made you feel. I care about you a lot — more than I say sometimes.
+          I don’t want to hurt or loose you; I want to keep you. If I sounded harsh, that’s on me.
+          I’m learning. I’ll do better. You deserve gentleness, especially from me.
+          <div class="sig">— your Luckily🤍</div>
+        </div>
+      </section>
+    </main>
+
+    <footer style="text-align:center;padding:12px 16px;color:var(--muted)">Made with care — pastel, soft, and sincere. — your Luckily🤍</footer>
+  </div>
+
+  <script>
+    // ===== Sections (single source of truth) =====
+    const sections = [
+      { key:'soft', title:'Soft & Genuine', html:`
+        <section class="card" style="background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:24px;margin:8px">
+          <span style="display:inline-flex;gap:8px;align-items:center;background:#fde7f7;color:#a23fd7;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:600">💛 A gentle note</span>
+          <h1 style="margin:16px 0 8px;font-size:32px;line-height:1.1;color:#2b2630">I'm really sorry for hurting you.</h1>
+          <p style="color:#6e6779;font-size:18px">I never want to be the reason your heart feels heavy. You matter to me, and your feelings matter to me.</p>
+          <p style="color:#6e6779;font-size:18px">When you wake up, I hope you feel light, loved and beautiful. If you're open to it, I'd love to listen and make it right.</p>
+          <div style="background:#fdf2f8;border:1px dashed #f1c4e6;color:#8a385b;padding:14px 16px;border-radius:14px;margin-top:16px">You are precious — not just important. Precious.</div>
+          <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn" onclick="alert('Virtual hug delivered 🤗')">🤗 Send you a hug</button>
+            <button class="btn ghost" onclick="alert('I’ll be here whenever you’re ready. ❤️')">❤️ I’m here</button>
+          </div>
+          <div style="margin-top:10px;color:#8b7a9e;font-weight:600">— your Luckily🤍</div>
+        </section>`},
+      { key:'bouquet', title:'Digital Bouquet', html:`
+        <section class="card" style="background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:24px;margin:8px;text-align:center">
+          <h1 style="margin:0 0 8px;font-size:30px;color:#2b2630">💐 A Small Bouquet For You</h1>
+          <div style="font-size:36px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0">💐 🌼 🌸 🌷 🌺 🌻 💗</div>
+          <p style="color:#6e6779;font-size:18px">I'm sorry for the hurt. You deserve mornings filled with warmth and soft smiles.</p>
+          <p style="color:#8b7a9e;font-weight:600">— your Luckily🤍</p>
+        </section>`},
+      { key:'playlist', title:'Mood Playlist', html:`
+        <section class="card" style="background:linear-gradient(180deg,#fff7fb,#efe6ff);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:0;margin:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #eadcff;color:#5b4f70">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:50%;background:#c084fc;box-shadow:0 0 10px #c084fc;display:inline-block"></span><strong>Your Mood Booster Playlist</strong></div>
+            <div>🎧</div>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0;color:#4f465d">
+            <li style="padding:16px 20px;border-bottom:1px solid #f0e7ff;display:flex;gap:12px;align-items:center"><span style="min-width:28px;text-align:right;color:#9a8fa6">01</span><div><div style="font-weight:700">Tum Ho Toh</div><div style="font-size:14px;color:#9a8fa6">calm, soft, morning</div></div></li>
+            <li style="padding:16px 20px;border-bottom:1px solid #f0e7ff;display:flex;gap:12px;align-items:center"><span style="min-width:28px;text-align:right;color:#9a8fa6">02</span><div><div style="font-weight:700">Dooron Dooron</div><div style="font-size:14px;color:#9a8fa6">warm piano, gentle</div></div></li>
+            <li style="padding:16px 20px;border-bottom:1px solid #f0e7ff;display:flex;gap:12px;align-items:center"><span style="min-width:28px;text-align:right;color:#9a8fa6">03</span><div><div style="font-weight:700">Khuda Bhi</div><div style="font-size:14px;color:#9a8fa6">lofi hug edition</div></div></li>
+            <li style="padding:16px 20px;border-bottom:1px solid #f0e7ff;display:flex;gap:12px;align-items:center"><span style="min-width:28px;text-align:right;color:#9a8fa6">04</span><div><div style="font-weight:700">Vaaroon</div><div style="font-size:14px;color:#9a8fa6">sunny afternoon</div></div></li>
+            <li style="padding:16px 20px;display:flex;gap:12px;align-items:center"><span style="min-width:28px;text-align:right;color:#9a8fa6">05</span><div><div style="font-weight:700">Arz Kiya Hai</div><div style="font-size:14px;color:#9a8fa6">heartfelt & honest</div></div></li>
+          </ul>
+          <div style="padding:16px 20px;color:#7b6f8f">PS: I’m really sorry. Let me make it right. 💛 — your Luckily🤍</div>
+        </section>`},
+      { key:'capsule', title:'Morning Capsule', html:`
+        <section class="card" style="background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:24px;margin:8px">
+          <h1 style="margin:0 0 8px;text-align:center;color:#2b2630">🌼 Your Morning Capsule</h1>
+          <p style="margin:0 0 14px;text-align:center;color:#6e6779">Open each one when you're ready.</p>
+          <div style="display:grid;gap:10px;margin-top:12px">
+            <details style="border:1px solid #f1e8ff;border-radius:14px;padding:12px 14px;background:#faf7ff"><summary style="cursor:pointer;font-weight:700">Open 1: A gentle apology 🤍</summary><div>I’m sorry for hurting you today. You and your feelings matter to me.</div></details>
+            <details style="border:1px solid #f1e8ff;border-radius:14px;padding:12px 14px;background:#faf7ff"><summary style="cursor:pointer;font-weight:700">Open 2: A soft reminder 💛</summary><div>You are loved, valued and beautiful — always.</div></details>
+            <details style="border:1px solid #f1e8ff;border-radius:14px;padding:12px 14px;background:#faf7ff"><summary style="cursor:pointer;font-weight:700">Open 3: A warm hug 🤗</summary><div>Until I can give a real one, please accept this virtual hug.</div></details>
+            <details style="border:1px solid #f1e8ff;border-radius:14px;padding:12px 14px;background:#faf7ff"><summary style="cursor:pointer;font-weight:700">Open 4: A hope ✨</summary><div>I hope today gives you peace and tiny reasons to smile.</div></details>
+          </div>
+          <div style="margin-top:10px;text-align:center;color:#8b7a9e;font-weight:600">— your Luckily🤍</div>
+        </section>`},
+      { key:'colors', title:'Color Message', html:`
+        <section class="card" style="background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:18px;margin:8px">
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <div style="background:#fde68a;color:#1f2937;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end"><span>💛 Yellow</span><h3 style="margin:6px 0 0">You bring light</h3></div>
+            <div style="background:#93c5fd;color:#111827;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end"><span>💙 Blue</span><h3 style="margin:6px 0 0">I’m sorry if I caused a storm</h3></div>
+            <div style="background:#f9a8d4;color:#111827;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end"><span>💗 Pink</span><h3 style="margin:6px 0 0">You deserve softness</h3></div>
+            <div style="background:#86efac;color:#064e3b;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end"><span>💚 Green</span><h3 style="margin:6px 0 0">I hope things heal</h3></div>
+            <div style="background:#c4b5fd;color:#1f2937;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end"><span>💜 Purple</span><h3 style="margin:6px 0 0">You’re special to me</h3></div>
+            <div style="background:#ffffff;color:#1f2937;border-radius:16px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:end;border:1px solid #f1e8ff"><span>🤍 White</span><h3 style="margin:6px 0 0">I’m truly sorry</h3></div>
+          </div>
+          <p style="margin:12px 0 0;color:#8b7a9e;font-weight:600;text-align:center">— your Luckily🤍</p>
+        </section>`},
+      { key:'polaroid', title:'Polaroid Note', html:`
+        <section class="card" style="background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:18px;margin:8px;display:grid;place-items:center">
+          <div style="background:#fff;border:10px solid #fff;box-shadow:0 12px 30px rgba(0,0,0,.12);width:min(92vw,360px);border-bottom-width:36px;border-radius:6px">
+            <div style="height:260px;background:linear-gradient(135deg,#dbeafe,#fbcfe8);display:grid;place-items:center;font-size:64px">💛</div>
+            <div style="position:relative;top:8px;text-align:center;font-weight:700">I’m sorry.</div>
+          </div>
+          <p style="color:#64748b;margin-top:8px">You make my days softer. Thank you for being you.</p>
+          <button class="btn ghost" style="margin-top:8px" onclick="alert('Collect one forehead kiss 💛')">Collect virtual forehead kiss</button>
+          <p style="margin:12px 0 0;color:#8b7a9e;font-weight:600">— your Luckily🤍</p>
+        </section>`}
+    ];
+
+    // ===== Build tabs & views (clean, no duplicates) =====
+    const tabs = document.getElementById('tabs');
+    const views = document.getElementById('views');
+
+    sections.forEach((s, i)=>{
+      const b = document.createElement('button');
+      b.className = 'tab' + (i===0?' active':'');
+      b.textContent = s.title;
+      b.setAttribute('data-key', s.key);
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', i===0 ? 'true' : 'false');
+      b.setAttribute('tabindex', i===0 ? '0' : '-1');
+      tabs.appendChild(b);
+
+      const holder = document.createElement('section');
+      holder.innerHTML = s.html;
+      holder.className = i===0 ? 'active' : '';
+      holder.id = 'view-' + s.key;
+      holder.setAttribute('role','tabpanel');
+      holder.setAttribute('aria-labelledby', s.key+'-tab');
+      views.appendChild(holder);
+    });
+
+    function activateTab(btn){
+      document.querySelectorAll('.tab').forEach((t)=>{
+        const isActive = t===btn;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-selected', isActive?'true':'false');
+        t.setAttribute('tabindex', isActive?'0':'-1');
+      });
+      const k = btn.getAttribute('data-key');
+      document.querySelectorAll('#views > section').forEach(v=>v.classList.remove('active'));
+      const active = document.getElementById('view-'+k);
+      active.classList.add('active');
+      active.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    tabs.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.tab');
+      if(btn) activateTab(btn);
+    });
+    tabs.addEventListener('keydown',(e)=>{
+      const keys=['ArrowRight','ArrowLeft'];
+      if(!keys.includes(e.key)) return;
+      const all=[...document.querySelectorAll('.tab')];
+      const idx=all.indexOf(document.activeElement);
+      if(idx<0) return;
+      const next = e.key==='ArrowRight' ? all[(idx+1)%all.length] : all[(idx-1+all.length)%all.length];
+      next.focus();
+      activateTab(next);
+    });
+
+    // ===== Decorations (throttled) =====
+    const heartLayer = document.getElementById('hearts');
+    const sparkleLayer = document.getElementById('sparkles');
+    const maxHearts = 16, maxSparkles = 48;
+    let lastHeart = 0, lastSparkle = 0;
+
+    function spawnHeart(){
+      if(heartLayer.childElementCount >= maxHearts) return;
+      const h = document.createElement('span');
+      h.textContent = Math.random() > 0.66 ? '💗' : (Math.random()>0.33 ? '💖' : '💞');
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (5.5 + Math.random()*3.5) + 's';
+      heartLayer.appendChild(h);
+      setTimeout(()=>h.remove(), 9000);
+    }
+    function spawnSparkle(){
+      if(sparkleLayer.childElementCount >= maxSparkles) return;
+      const s = document.createElement('i');
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.top = Math.random()*100 + 'vh';
+      s.style.animationDelay = (Math.random()*2)+'s';
+      sparkleLayer.appendChild(s);
+      setTimeout(()=>s.remove(), 3500);
+    }
+    function loop(ts){
+      if(!lastHeart) lastHeart = ts;
+      if(!lastSparkle) lastSparkle = ts;
+      if(ts - lastHeart > 800){ spawnHeart(); lastHeart = ts; }
+      if(ts - lastSparkle > 140){ spawnSparkle(); lastSparkle = ts; }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
