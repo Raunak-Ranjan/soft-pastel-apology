@@ -1,9 +1,10 @@
-for-her-apology.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- mobile-safe viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7ecff" />
   <title>Soft Pastel Apology — Switcher</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -13,14 +14,21 @@ for-her-apology.html
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--ink)}
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--ink);
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
 
     .app{min-height:100svh;display:flex;flex-direction:column}
     header{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid #f1e8ff;z-index:5}
     .bar{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:14px 16px}
     .logo{font-weight:700}
     .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
-    .tab{padding:10px 14px;border-radius:999px;border:1px solid var(--tab-border);background:var(--tab-bg);cursor:pointer;font-weight:600;color:var(--ink);transition:transform .15s ease, background .2s ease, box-shadow .2s ease}
+    .tabs[role="tablist"] .tab{padding:10px 14px;border-radius:999px;border:1px solid var(--tab-border);background:var(--tab-bg);cursor:pointer;font-weight:600;color:var(--ink);transition:transform .15s ease, background .2s ease, box-shadow .2s ease}
     .tab:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
     .tab.active{background:linear-gradient(135deg,#ffeaf5,var(--tab-active));border-color:var(--accent);box-shadow:0 6px 16px rgba(194,108,229,.18)}
     .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -60,7 +68,8 @@ for-her-apology.html
     <header>
       <div class="bar">
         <div class="logo">💗 Soft Pastel Apology</div>
-        <nav class="tabs" id="tabs" aria-label="Apology variations"></nav>
+        <!-- ARIA: role=tablist -->
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Apology variations"></nav>
       </div>
     </header>
 
@@ -76,7 +85,7 @@ for-her-apology.html
         <h3>Notes (raw, real, from the heart)</h3>
         <div class="note-card" id="noteCard">
           Hey, I’m sorry for the way I made you feel. I care about you a lot — more than I say sometimes.
-          I don’t want to hurt or loose you; I want to keep you. If I sounded harsh, that’s on me.
+          I don’t want to hurt or lose you; I want to keep you. If I sounded harsh, that’s on me.
           I’m learning. I’ll do better. You deserve gentleness, especially from me.
           <div class="sig">— your Luckily🤍</div>
         </div>
@@ -160,7 +169,7 @@ for-her-apology.html
         </section>`}
     ];
 
-    // ===== Build tabs & views (clean, no duplicates) =====
+    // ===== Build tabs & views (clean, no duplicates, ARIA-correct) =====
     const tabs = document.getElementById('tabs');
     const views = document.getElementById('views');
 
@@ -168,6 +177,7 @@ for-her-apology.html
       const b = document.createElement('button');
       b.className = 'tab' + (i===0?' active':'');
       b.textContent = s.title;
+      b.id = s.key + '-tab';                    // give the tab a real id
       b.setAttribute('data-key', s.key);
       b.setAttribute('role', 'tab');
       b.setAttribute('aria-selected', i===0 ? 'true' : 'false');
@@ -179,7 +189,8 @@ for-her-apology.html
       holder.className = i===0 ? 'active' : '';
       holder.id = 'view-' + s.key;
       holder.setAttribute('role','tabpanel');
-      holder.setAttribute('aria-labelledby', s.key+'-tab');
+      holder.setAttribute('aria-labelledby', b.id); // link to the tab id
+      b.setAttribute('aria-controls', holder.id);   // and the tab controls this panel
       views.appendChild(holder);
     });
 
@@ -247,4 +258,3 @@ for-her-apology.html
   </script>
 </body>
 </html>
-
